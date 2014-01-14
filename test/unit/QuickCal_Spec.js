@@ -13,5 +13,8 @@ describe('QuickCalifier', function() {
         it('tomorrow', function() {
             expect(translate('tom')).to.contain('tomorrow');
         });
+        it('for weekdays', function() {
+            expect(translate('sun')).to.contain('sunday');
+        });
     });
 });
