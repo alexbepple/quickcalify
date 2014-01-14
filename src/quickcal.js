@@ -1,9 +1,8 @@
 var _ = require('underscore');
 
-var wordsThatCanBeAbbreviated = [
-    'today',
-    'tomorrow'
-];
+var wordsThatCanBeAbbreviated = 
+    'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
+    .split(' ');
 
 var expandAbbreviations = function (match) {
     return _.find(wordsThatCanBeAbbreviated.concat(match), function (element) {
