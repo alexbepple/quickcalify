@@ -1,12 +1,14 @@
+var _ = require('underscore');
 
-var abbreviations = {
-    'tod': 'today',
-    'tom': 'tomorrow'
-};
+var wordsThatCanBeAbbreviated = [
+    'today',
+    'tomorrow'
+];
 
 var expandAbbreviations = function (match) {
-    if (abbreviations.hasOwnProperty(match)) return abbreviations[match];
-    return match;
+    return _.find(wordsThatCanBeAbbreviated.concat(match), function (element) {
+        return element.indexOf(match) === 0;
+    });
 };
 
 var translate = function (input) {
