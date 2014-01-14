@@ -1,11 +1,11 @@
-var _ = require('underscore');
+require('sugar');
 
 var wordsThatCanBeAbbreviated = 
     'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
     .split(' ');
 
 var expandAbbreviations = function (match) {
-    return _.find(wordsThatCanBeAbbreviated.concat(match), function (element) {
+    return wordsThatCanBeAbbreviated.concat(match).find(function (element) {
         return element.indexOf(match) === 0;
     });
 };
