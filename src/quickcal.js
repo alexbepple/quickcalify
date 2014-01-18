@@ -5,26 +5,38 @@ var wordsThatCanBeAbbreviated =
     'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
     .split(' ');
 
-var expandAbbreviations = function (match) {
+var expandAbbreviation = function (match) {
     return wordsThatCanBeAbbreviated.concat(match).find(function (element) {
         return element.indexOf(match) === 0;
     });
 };
+var expandAbbreviations = function (input) {
+    return input.replace(/\w+/, expandAbbreviation);
+};
 
-var translate = function (input) {
-    var inputExpanded = input.replace(/\w+/, expandAbbreviations);
-    var tokens = inputExpanded.split(' ');
-
+var parse = function (input) {
+    var tokens = input.split(' ');
     var noOfTokensForValidDates = (1).upto(tokens.length).map(function (n) {
         return Date.create(tokens.first(n).join(' ')).isValid();
     });
     var noOfTokensForStart = noOfTokensForValidDates.lastIndexOf(true) + 1;
-    if (noOfTokensForStart > 0) {
-        var start = tokens.first(noOfTokensForStart).join(' ');
-        var titleTokens = tokens.from(noOfTokensForStart);
-        return util.format('%s "%s"', start, titleTokens.join(' '));
-    }
-    return inputExpanded;
+    return {
+        start: tokens.first(noOfTokensForStart).join(' '),
+        title: tokens.from(noOfTokensForStart).join(' ')
+    };
 };
 
-exports.translate = translate;
+var format = function (event) {
+    return util.format('%s "%s"', event.start, event.title);
+};
+
+var translate = function (input) {
+    return format(parse(expandAbbreviations(input)));
+};
+
+exports = Object.merge(exports, {
+    expandAbbreviations: expandAbbreviations,
+    parse: parse,
+    format: format,
+    translate: translate
+});

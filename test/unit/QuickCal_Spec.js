@@ -1,30 +1,31 @@
 var expect = require('chai').expect;
+var q = require('quickcal');
 var translate = require('quickcal').translate;
 
 describe('QuickCalifier', function() {
-    it('returns input unchanged when there is nothing to do', function() {
-        expect(translate('foo')).to.equal('foo');
-    });
-
     describe('expands abbreviations', function() {
         it('today', function() {
-            expect(translate('tod')).to.contain('today');
+            expect(q.expandAbbreviations('tod')).to.contain('today');
         });
         it('tomorrow', function() {
-            expect(translate('tom')).to.contain('tomorrow');
+            expect(q.expandAbbreviations('tom')).to.contain('tomorrow');
         });
         it('for weekdays', function() {
-            expect(translate('sun')).to.contain('sunday');
+            expect(q.expandAbbreviations('sun')).to.contain('sunday');
         });
     });
 
-    it('preserves dd mmm', function () {
-        expect(translate('24 mar foo')).to.contain('24 mar');
+    it('preserves space in start text', function () {
+        expect(q.parse('24 mar').start).to.equal('24 mar');
     });
 
-    it('protects numbers in event name', function() {
-        expect(translate('17:00 GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
-        expect(translate('24 Mar GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
-        expect(translate('24 Mar 17:00 GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
+    it('protects numbers in event title', function() {
+        expect(q.parse('17:00 foo 1').title).to.equal('foo 1');
+        expect(q.parse('24 Mar foo 1').title).to.equal('foo 1');
+        expect(q.parse('24 Mar 17:00 foo 1').title).to.equal('foo 1');
+    });
+
+    describe('formats parsing result for QuickCal', function() {
+        expect(q.format({start: 'foo', title: 'bar'})).to.equal('foo "bar"');
     });
 });
