@@ -4,6 +4,7 @@
     "chai": "~1.8.1"
   },
   "dependencies": {
-    "sugar": "~1.4.1"
+    "sugar": "~1.4.1",
+    "underscore": "~1.5.2"
   }
 }

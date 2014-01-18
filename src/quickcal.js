@@ -1,5 +1,6 @@
 require('sugar');
 var util = require('util');
+var _ = require('underscore');
 
 var wordsThatCanBeAbbreviated = 
     'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
@@ -31,7 +32,9 @@ var format = function (event) {
 };
 
 var translate = function (input) {
-    return format(parse(expandAbbreviations(input)));
+    return _.compose(
+        format, parse, expandAbbreviations
+    ).call(this, input);
 };
 
 exports = Object.merge(exports, {
