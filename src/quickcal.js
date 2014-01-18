@@ -1,4 +1,5 @@
 require('sugar');
+var util = require('util');
 
 var wordsThatCanBeAbbreviated = 
     'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
@@ -11,7 +12,19 @@ var expandAbbreviations = function (match) {
 };
 
 var translate = function (input) {
-    return input.replace(/\w+/, expandAbbreviations);
+    var inputExpanded = input.replace(/\w+/, expandAbbreviations);
+    var tokens = inputExpanded.split(' ');
+
+    var noOfTokensForValidDates = (1).upto(tokens.length).map(function (n) {
+        return Date.create(tokens.first(n).join(' ')).isValid();
+    });
+    var noOfTokensForStart = noOfTokensForValidDates.lastIndexOf(true) + 1;
+    if (noOfTokensForStart > 0) {
+        var start = tokens.first(noOfTokensForStart).join(' ');
+        var titleTokens = tokens.from(noOfTokensForStart);
+        return util.format('%s "%s"', start, titleTokens.join(' '));
+    }
+    return inputExpanded;
 };
 
 exports.translate = translate;

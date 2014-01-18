@@ -17,4 +17,14 @@ describe('QuickCalifier', function() {
             expect(translate('sun')).to.contain('sunday');
         });
     });
+
+    it('preserves dd mmm', function () {
+        expect(translate('24 mar foo')).to.contain('24 mar');
+    });
+
+    it('protects numbers in event name', function() {
+        expect(translate('17:00 GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
+        expect(translate('24 Mar GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
+        expect(translate('24 Mar 17:00 GFGFR 1/2014')).to.contain('"GFGFR 1/2014"');
+    });
 });
