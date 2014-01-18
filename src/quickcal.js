@@ -2,9 +2,11 @@ require('sugar');
 var util = require('util');
 var _ = require('underscore');
 
+var split = function (input) { return input.split(' '); };
+var join = function (array) { return array.join(' '); };
+
 var wordsThatCanBeAbbreviated = 
-    'today tomorrow monday tuesday wednesday thursday friday saturday sunday'
-    .split(' ');
+    split('today tomorrow monday tuesday wednesday thursday friday saturday sunday');
 
 var expandAbbreviation = function (match) {
     return wordsThatCanBeAbbreviated.concat(match).find(function (element) {
@@ -16,14 +18,14 @@ var expandAbbreviations = function (input) {
 };
 
 var parse = function (input) {
-    var tokens = input.split(' ');
+    var tokens = split(input);
     var noOfTokensForValidDates = (1).upto(tokens.length).map(function (n) {
-        return Date.create(tokens.first(n).join(' ')).isValid();
+        return Date.create(join(tokens.first(n))).isValid();
     });
     var noOfTokensForStart = noOfTokensForValidDates.lastIndexOf(true) + 1;
     return {
-        start: tokens.first(noOfTokensForStart).join(' '),
-        title: tokens.from(noOfTokensForStart).join(' ')
+        start: join(tokens.first(noOfTokensForStart)),
+        title: join(tokens.from(noOfTokensForStart))
     };
 };
 
@@ -43,3 +45,4 @@ exports = Object.merge(exports, {
     format: format,
     translate: translate
 });
+
