@@ -17,12 +17,39 @@ var expandAbbreviations = function (input) {
     return input.replace(/\w+/, expandAbbreviation);
 };
 
-var parse = function (input) {
+var guessMonth= function (day, reference) {
+    var dayWithCurrentMonth = Date.create(reference).set({day: day});
+    var dayWithNextMonth = Date.create(dayWithCurrentMonth).advance({month: 1});
+
+    var dates = [dayWithCurrentMonth, dayWithNextMonth];
+    var closestFutureDate = dates.find(function(d){return d.isAfter(reference);});
+
+    return closestFutureDate.format('{Mon}');
+};
+var containsMonth = function (input) {
+    return (/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i).test(input);
+};
+var containsDay = function (input) {
+    return (/^\d{1,2}$/).test(split(input)[0]);
+};
+var addMonthIfNecessary = function (input, reference) {
+    if (!containsDay(input) || containsMonth(input)) return input;
+
     var tokens = split(input);
+    var guessedMonth = guessMonth(tokens[0], reference);
+    return join(tokens.include(guessedMonth, 1));
+};
+
+var parse = function (input, reference) {
+    if (_.isUndefined(reference)) reference = Date.create();
+
+    var tokens = split(input);
+
     var noOfTokensForValidDates = (1).upto(tokens.length).map(function (n) {
         return Date.create(join(tokens.first(n))).isValid();
     });
     var noOfTokensForStart = noOfTokensForValidDates.lastIndexOf(true) + 1;
+
     return {
         start: join(tokens.first(noOfTokensForStart)),
         title: join(tokens.from(noOfTokensForStart))
@@ -35,14 +62,20 @@ var format = function (event) {
 
 var translate = function (input) {
     return _.compose(
-        format, parse, expandAbbreviations
+        format, parse, addMonthIfNecessary, expandAbbreviations
     ).call(this, input);
 };
 
 exports = Object.merge(exports, {
+    addMonthIfNecessary: addMonthIfNecessary,
+    containsMonth: containsMonth,
+    containsDay: containsDay,
+    guessMonth: guessMonth,
+
     expandAbbreviations: expandAbbreviations,
     parse: parse,
     format: format,
-    translate: translate
+
+    translate: translate,
 });
 
