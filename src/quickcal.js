@@ -56,13 +56,17 @@ var parse = function (input, reference) {
     };
 };
 
+var disambiguateTimes = function (input) {
+    return input.replace(/\b(\d:\d\d)/, '0$1');
+};
+
 var format = function (event) {
     return util.format('%s "%s"', event.start, event.title);
 };
 
 var translate = function (input) {
     return _.compose(
-        format, parse, addMonthIfNecessary, expandAbbreviations
+        format, parse, addMonthIfNecessary, expandAbbreviations, disambiguateTimes
     ).call(this, input);
 };
 
@@ -75,6 +79,7 @@ exports = Object.merge(exports, {
     expandAbbreviations: expandAbbreviations,
     parse: parse,
     format: format,
+    disambiguateTimes: disambiguateTimes,
 
     translate: translate,
 });

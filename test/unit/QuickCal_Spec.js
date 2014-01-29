@@ -44,6 +44,15 @@ describe('QuickCalifier', function() {
         });
     });
 
+    describe('assumes times to be in 24-h format', function() {
+        it('and prepends 0 to h:mm times', function() {
+            expect(q.disambiguateTimes('1:00')).to.equal('01:00');
+        });
+        it('and leaves unambiguous times alone', function() {
+            expect(q.disambiguateTimes('01:00')).to.equal('01:00');
+        });
+    });
+
     it('protects numbers in event title', function() {
         expect(q.parse('17:00 foo 1').title).to.equal('foo 1');
         expect(q.parse('24 Mar foo 1').title).to.equal('foo 1');
