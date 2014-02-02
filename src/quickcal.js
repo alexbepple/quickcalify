@@ -61,7 +61,7 @@ var disambiguateTimes = function (input) {
 };
 
 var format = function (event) {
-    return util.format('%s "%s"', event.start, event.title);
+    return util.format('%s "%s"', event.start, event.title.replace(/"/g, "'"));
 };
 
 var translate = function (input) {
