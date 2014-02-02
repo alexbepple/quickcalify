@@ -40,19 +40,29 @@ var addMonthIfNecessary = function (input, reference) {
     return join(tokens.include(guessedMonth, 1));
 };
 
+var noOfTokensThatContainDate = function (tokens) {
+    var doesThisNumberOfTokensContainDate = (1).upto(tokens.length).map(function (n) {
+        return Date.create(join(tokens.first(n))).isValid();
+    });
+    return doesThisNumberOfTokensContainDate.lastIndexOf(true) + 1;
+};
+
 var parse = function (input, reference) {
     if (_.isUndefined(reference)) reference = Date.create();
 
     var tokens = split(input);
+    var noOfTokensForStart = noOfTokensThatContainDate(tokens);
+	var noOfTokensForEnd = 0;
 
-    var noOfTokensForValidDates = (1).upto(tokens.length).map(function (n) {
-        return Date.create(join(tokens.first(n))).isValid();
-    });
-    var noOfTokensForStart = noOfTokensForValidDates.lastIndexOf(true) + 1;
+	var remainingTokens = tokens.from(noOfTokensForStart);
+	if (remainingTokens[0] === 'to') {
+		noOfTokensForEnd = 1 + noOfTokensThatContainDate(remainingTokens.from(1));
+	}
 
+	var noOfTokensBeforeTitle = noOfTokensForStart + noOfTokensForEnd;
     return {
-        start: join(tokens.first(noOfTokensForStart)),
-        title: join(tokens.from(noOfTokensForStart))
+        start: join(tokens.first(noOfTokensBeforeTitle)),
+        title: join(tokens.from(noOfTokensBeforeTitle))
     };
 };
 

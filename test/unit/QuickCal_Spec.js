@@ -53,6 +53,10 @@ describe('QuickCalifier', function() {
         });
     });
 
+    it('allows for end date', function() {
+        expect(q.parse('mon to tue foo').title).to.equal('foo');
+    });
+
     it('protects numbers in event title', function() {
         expect(q.parse('17:00 foo 1').title).to.equal('foo 1');
         expect(q.parse('24 Mar foo 1').title).to.equal('foo 1');
