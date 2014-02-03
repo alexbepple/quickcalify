@@ -61,7 +61,7 @@ var parse = function (input, reference) {
 
 	var noOfTokensBeforeTitle = noOfTokensForStart + noOfTokensForEnd;
     return {
-        start: join(tokens.first(noOfTokensBeforeTitle)),
+        date: join(tokens.first(noOfTokensBeforeTitle)),
         title: join(tokens.from(noOfTokensBeforeTitle))
     };
 };
@@ -71,7 +71,7 @@ var disambiguateTimes = function (input) {
 };
 
 var format = function (event) {
-    return util.format('%s "%s"', event.start, event.title.replace(/"/g, "'"));
+    return util.format('%s "%s"', event.date, event.title.replace(/"/g, "'"));
 };
 
 var translate = function (input) {

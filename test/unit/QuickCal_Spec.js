@@ -64,7 +64,7 @@ describe('QuickCalifier', function() {
     });
 
     describe('formats parsing result for QuickCal', function() {
-        expect(q.format({start: 'foo', title: 'bar'})).to.equal('foo "bar"');
+        expect(q.format({date: 'foo', title: 'bar'})).to.equal('foo "bar"');
     });
     it('replaces double quotes with single quotes', function() {
         expect(q.format({title:'"foo"'})).to.contain("'foo'");
