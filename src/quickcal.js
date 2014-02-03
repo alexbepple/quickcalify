@@ -47,19 +47,32 @@ var noOfTokensThatContainDate = function (tokens) {
     return doesThisNumberOfTokensContainDate.lastIndexOf(true) + 1;
 };
 
+var noOfTokensForEnd = function (tokens) {
+	if (tokens[0] === 'to') {
+		return 1 + noOfTokensThatContainDate(tokens.from(1));
+	}
+    return 0;
+};
+var noOfTokensForDuration = function (tokens) {
+    var duration = (/\d( )?(d|h|min)/).exec(join(tokens.first(2)));
+    if (duration) {
+        var occurrencesOfSpace = duration[0].match(/ /) ? 1 : 0;
+		return 1 + occurrencesOfSpace;
+    }
+    return 0;
+};
+
 var parse = function (input, reference) {
     if (_.isUndefined(reference)) reference = Date.create();
 
     var tokens = split(input);
     var noOfTokensForStart = noOfTokensThatContainDate(tokens);
-	var noOfTokensForEnd = 0;
 
-	var remainingTokens = tokens.from(noOfTokensForStart);
-	if (remainingTokens[0] === 'to') {
-		noOfTokensForEnd = 1 + noOfTokensThatContainDate(remainingTokens.from(1));
-	}
+	var tokensAfterStart = tokens.from(noOfTokensForStart);
+	var noOfTokensBeforeTitle = noOfTokensForStart 
+        + noOfTokensForEnd(tokensAfterStart) 
+        + noOfTokensForDuration(tokensAfterStart);
 
-	var noOfTokensBeforeTitle = noOfTokensForStart + noOfTokensForEnd;
     return {
         date: join(tokens.first(noOfTokensBeforeTitle)),
         title: join(tokens.from(noOfTokensBeforeTitle))
@@ -90,6 +103,8 @@ exports = Object.merge(exports, {
     parse: parse,
     format: format,
     disambiguateTimes: disambiguateTimes,
+
+    noOfTokensForDuration: noOfTokensForDuration,
 
     translate: translate,
 });

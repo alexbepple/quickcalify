@@ -57,13 +57,29 @@ describe('QuickCalifier', function() {
         expect(q.parse('mon to tue foo').title).to.equal('foo');
     });
 
+    describe('allows for duration', function() {
+        it('in days', function() {
+            expect(q.parse('mon 2d foo').title).to.equal('foo');
+        });
+        it('in hours', function() {
+            expect(q.noOfTokensForDuration(['2h'])).to.equal(1);
+        });
+        it('in minutes', function() {
+            expect(q.noOfTokensForDuration(['1min'])).to.equal(1);
+            expect(q.noOfTokensForDuration(['10min'])).to.equal(1);
+        });
+        it('with space before unit', function() {
+            expect(q.noOfTokensForDuration(['1', 'min'])).to.equal(2);
+        });
+    });
+
     it('protects numbers in event title', function() {
         expect(q.parse('17:00 foo 1').title).to.equal('foo 1');
         expect(q.parse('24 Mar foo 1').title).to.equal('foo 1');
         expect(q.parse('24 Mar 17:00 foo 1').title).to.equal('foo 1');
     });
 
-    describe('formats parsing result for QuickCal', function() {
+    it('formats parsing result for QuickCal', function() {
         expect(q.format({date: 'foo', title: 'bar'})).to.equal('foo "bar"');
     });
     it('replaces double quotes with single quotes', function() {
