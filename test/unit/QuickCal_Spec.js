@@ -20,27 +20,29 @@ describe('QuickCalifier', function() {
         beforeEach(function() {
             reference = Date.create('2 Jan');
         });
-        it('', function() {
+        it('using current month', function() {
             expect(q.addMonthIfNecessary('3', reference)).to.equal('3 Jan');
         });
-        it('giving next month if necessary', function() {
+        it('using next month if necessary', function() {
             expect(q.guessMonth('1', reference)).to.equal('Feb');
         });
-        it('only if a day is given', function () {
+        it('only if a day is given at all', function () {
             expect(q.containsDay('0:00')).to.be.false;
             expect(q.addMonthIfNecessary('0:00')).to.equal('0:00');
         });
-        it('giving next month for today ', function() {
+        it('using next month for today ', function() {
             expect(q.guessMonth('2', reference)).to.equal('Feb');
         });
     });
     describe('requires month to be given as three-letter abbreviation', function() {
-        it('', function() {
-            expect(q.containsMonth('3')).to.be.false;
+        it('that can be lowercase', function() {
             expect(q.containsMonth('feb')).to.be.true;
         });
-        it(', that is case-insensitive', function() {
+        it('that can be uppercase', function() {
             expect(q.containsMonth('Feb')).to.be.true;
+        });
+        it('which cannot be a number', function() {
+            expect(q.containsMonth('3')).to.be.false;
         });
     });
 

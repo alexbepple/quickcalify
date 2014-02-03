@@ -17,7 +17,7 @@ var expandAbbreviations = function (input) {
     return input.replace(/\w+/, expandAbbreviation);
 };
 
-var guessMonth= function (day, reference) {
+var guessMonth = function (day, reference) {
     var dayWithCurrentMonth = Date.create(reference).set({day: day});
     var dayWithNextMonth = Date.create(dayWithCurrentMonth).advance({month: 1});
 
