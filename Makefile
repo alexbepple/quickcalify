@@ -1,7 +1,12 @@
+PATH := node_modules/.bin:$(PATH)
+
 test: test-unit
 
 test-unit:
-	NODE_PATH=src ./node_modules/.bin/mocha --check-leaks --recursive test/unit $(other_options)
+	PATH=$(PATH) NODE_PATH=src mocha --check-leaks --recursive test/unit --reporter mocha-unfunk-reporter
+
+tdd: test-unit-continuously
 
 test-unit-continuously:
-	 bundle exec guard --clear --notify false
+	PATH=$(PATH) nodemon --exec 'make test-unit' --ext js
+
