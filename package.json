@@ -1,4 +1,5 @@
 {
+  "private": true,
   "devDependencies": {
     "mocha": "~1.21.3",
     "chai": "~1.9.1",
